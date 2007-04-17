@@ -12,6 +12,7 @@ import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContext;
 import org.omg.CosNaming.NamingContextHelper;
 
+import servicesImpl.VTRImpl;
 import servicesImpl.VoterImpl;
 import servicesImpl.VotingMachineImpl;
 
@@ -32,6 +33,9 @@ public class SRV
 			VotingMachineImpl machineRef = new VotingMachineImpl();
 			orb.connect(machineRef);
 			
+			VTRImpl vtrRef = new VTRImpl();
+			orb.connect(vtrRef);
+			
 			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 			NamingContext ncRef = NamingContextHelper.narrow(objRef);
 
@@ -44,6 +48,12 @@ public class SRV
 			NameComponent machine = new NameComponent("VotingMachine", "");
 			NameComponent machinePath[] = { machine };
 			ncRef.rebind(machinePath, machineRef);
+			
+			//bind the Object Reference in Naming
+			NameComponent vtr = new NameComponent("vtr", "");
+			NameComponent vtrPath[] = { vtr };
+			ncRef.rebind(vtrPath, vtrRef);
+			
 			
 			System.out.println("serveur prêt...");
 			
